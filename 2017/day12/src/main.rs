@@ -15,6 +15,31 @@ fn main() {
                                         .collect();
     let con: i32 = get_num_connected_to(input.to_vec(), 0);
     println!("{}", con);
+    println!("{}", get_group_count(input.to_vec()));
+}
+
+fn get_group_count(input: Vec<Vec<i32>>) -> i32{
+    let mut groups: Vec<Vec<i32>> = Vec::new();
+    let mut roots: Vec<i32> = Vec::new();
+    let mut root: i32 = 0;
+    while root < (input.len() - 1) as i32{
+        for group in &groups {
+            for el in group {
+                if !roots.contains(&el) {roots.push(*el)}
+            }
+        }
+        //println!("{:?}", roots);
+        while roots.contains(&root) {
+            root += 1;
+        }
+        if root > (input.len() - 1) as i32 {
+            break;
+        }
+        groups.push(connected_to(root, input.to_vec()));
+        root += 1;
+    }
+    //println!("{:?}", groups);
+    groups.len() as i32
 }
 
 fn get_num_connected_to(input: Vec<Vec<i32>>, num: i32) -> i32{
