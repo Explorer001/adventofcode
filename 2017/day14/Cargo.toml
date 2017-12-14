@@ -1,0 +1,11 @@
+[package]
+name = "day14"
+version = "0.1.0"
+authors = ["Explorer001 <lukas.gehreke@gmail.com>"]
+
+[lib]
+name = "hashes"
+path = "src/lib.rs"
+
+[dependencies]
+regex = "0.2"
