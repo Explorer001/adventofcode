@@ -12,10 +12,13 @@ fn main() {
                                                       .collect())
                                             .collect();
     //println!("{:?}", input);
-    println!("{}", solve(input[0].to_vec(), 16));
+    println!("{}", solve(input[0].to_vec(), 16, 1));
+    println!("{}", solve(input[0].to_vec(), 16, 1000000000));
 }
 
-fn solve(input: Vec<String>, list_size: usize) -> String {
+fn solve(input: Vec<String>, list_size: usize, iterations: usize) -> String {
+    
+    let mut seen: Vec<String> = Vec::new();
 
     let mut instruction: Vec<String>;
     
@@ -40,40 +43,49 @@ fn solve(input: Vec<String>, list_size: usize) -> String {
     let mut vector_element: String;
     let mut operand: String = String::new();
 
-    for element in &input {
-        instruction = element.split("/")
-                             .map(|c| c.to_string())
-                             .collect();
-        let mut string_1: String = String::new();
-        let mut count: i32 = 0;
-        for i in instruction[0].chars() {
-            if count > 0 {
-                string_1.push(i);
-            } else {
-                operand = i.to_string();
-            }
-            count += 1;
-        }
+    let mut str_permutation: String;
 
-        if operand == "s" {
-            shift_size = string_1.parse().unwrap();
-            for _ in 0..shift_size {
-                vector_element = program_list.pop().unwrap();
-                program_list.insert(0, vector_element); 
-            }
-        } else if operand == "x" || operand == "p" {
-            if operand == "x" {
-                index_a = string_1.parse().unwrap();
-                index_b = instruction[1].parse().unwrap();
-            } else {
-                index_a = program_list.iter().position(|r| r.to_string() == string_1).unwrap();
-                index_b = program_list.iter().position(|r| r.to_string() == instruction[1]).
-                        unwrap();
+    for i in 0..iterations {
+        //println!("{:?}", seen);
+        str_permutation = program_list.iter().map(|e| e.to_string()).collect();
+        if seen.contains(&str_permutation) {
+            return seen[iterations % i].to_string();
+        }
+        seen.push(str_permutation);
+        for element in &input {
+            instruction = element.split("/")
+                                 .map(|c| c.to_string())
+                                 .collect();
+            let mut string_1: String = String::new();
+            let mut count: i32 = 0;
+            for i in instruction[0].chars() {
+                if count > 0 {
+                    string_1.push(i);
+                } else {
+                    operand = i.to_string();
+                }
+                count += 1;
             }
 
-            program_list.swap(index_a, index_b);
+            if operand == "s" {
+                shift_size = string_1.parse().unwrap();
+                for _ in 0..shift_size {
+                    vector_element = program_list.pop().unwrap();
+                    program_list.insert(0, vector_element); 
+                }
+            } else if operand == "x" || operand == "p" {
+                if operand == "x" {
+                    index_a = string_1.parse().unwrap();
+                    index_b = instruction[1].parse().unwrap();
+                } else {
+                    index_a = program_list.iter().position(|r| r.to_string() == string_1).unwrap();
+                    index_b = program_list.iter().position(|r| r.to_string() == instruction[1]).
+                            unwrap();
+                }
+
+                program_list.swap(index_a, index_b);
+            }
         }
-        //println!("{}", program_list.iter().map(|e| e.to_string()).collect::<String>());
     }
 
     program_list.iter().map(|e| e.to_string()).collect()
