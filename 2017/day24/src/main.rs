@@ -10,6 +10,7 @@ fn main() {
     get_max(input.to_vec());
     unsafe {
         println!("{}", STRONGEST_WEIGHT);
+        println!("{}", LONGEST_WEIGHT);
     }
 }
 
@@ -28,6 +29,9 @@ fn get_max(input: Vec<String>) {
 }
 
 static mut STRONGEST_WEIGHT: u64 = 0;
+static mut LONGEST_BRIDGE: usize = 0;
+static mut LONGEST_WEIGHT: u64 = 0;
+
 
 fn get_max_helper(bridge: Vec<String>, parts: Vec<String>) {
     let mut bridge_parts = parts.to_vec();
@@ -51,6 +55,12 @@ fn get_max_helper(bridge: Vec<String>, parts: Vec<String>) {
             println!("{:?}", bridge);
             println!("{:?}", bridge_parts);
             println!("");
+        }
+        if bridge.len() > LONGEST_BRIDGE {
+            LONGEST_BRIDGE = bridge.len();
+            LONGEST_WEIGHT = weight;
+        } else if bridge.len() == LONGEST_BRIDGE {
+            if weight > LONGEST_WEIGHT {LONGEST_WEIGHT = weight;}
         }
     }
 
