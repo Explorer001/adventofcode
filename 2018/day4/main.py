@@ -35,16 +35,6 @@ def format_input():
     
     #sort input
     pinput = sorted(pinput, key=itemgetter(0))
-
-    #num_days = 1
-    #for i in range(1, len(pinput)):
-    #    timestamp1, _ = pinput[i]
-    #    date1, _ = timestamp1
-    #    timestamp2, _ = pinput[i-1]
-    #    date2, _ = timestamp2
-    #    if date1[1] != date2[1] or date1[2] != date2[2]:
-    #        num_days += 1
-    #
     return (num_guards + 1, pinput)
 
 def get_max_index(l):
@@ -74,6 +64,9 @@ def get_sleep(pinput, num_guards):
                 sleep_list = sleep_time[active_guard]
                 for i in range(stime, wtime):
                     sleep_list[i] += 1
+    return sleep_time
+
+def part1(sleep_time):
     max_min_sleep = 0
     max_index = -1
     for i in range(len(sleep_time)):
@@ -82,8 +75,24 @@ def get_sleep(pinput, num_guards):
         if mx > max_min_sleep:
             max_min_sleep = mx
             max_index = i
-    print(max_index, max_min_sleep, get_max_index(sleep_time[max_index]))
     return max_index * get_max_index(sleep_time[max_index])
 
+def part2(sleep_time):
+    max_min_index = 0
+    max_min_val = 0
+    max_guard = 0
+    for i in range(60):
+        for j in range(len(sleep_time)):
+            l = sleep_time[j]
+            if l[i] > max_min_val:
+                max_min_val = l[i]
+                max_min_index = i
+                max_guard = j
+    return max_min_index * max_guard
+
 num_days, pinput = format_input()
-print(get_sleep(pinput, num_days))
+sleep_time = get_sleep(pinput, num_days)
+sol1 = part1(sleep_time)
+print(f"Solution1: {sol1}")
+sol2 = part2(sleep_time)
+print(f"Solution2: {sol2}")
