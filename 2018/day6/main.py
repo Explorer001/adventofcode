@@ -61,6 +61,7 @@ def filter_infinite(ls, maxx, maxy):
     new_list = []
     for p  in ls:
         cont = True
+        #if one point in cluster is field border, the cluster is infinite
         for pn in p.cluster:
             if pn.x == maxx or pn.x == 0 or pn.y == maxy or pn.y == 0:
                 cont = False
@@ -75,6 +76,7 @@ def cluster(plist):
     for j in range(plist[-1].y + 1):
         for i in range(plist[-1].x + 1):
             p = Point(i,j)
+            #calc dist from point to any cluster point
             index = min_dist_index(plist, p)
             if index >= 0:
                 #update cluster points if point is near
@@ -86,5 +88,22 @@ def cluster(plist):
             max_ = len(p.cluster)
     return max_
 
+def get_safe(plist):
+    safe_count = 0
+    for j in range(plist[-1].y + 1):
+        for i in range(plist[-1].x + 1):
+            p = Point(i, j)
+            dist = 0
+            #dist to all points
+            for pn in plist:
+                dist += p.dist(pn)
+            if dist < 10000:
+                safe_count += 1
+    return safe_count
+
 pinput = format_input()
-print(cluster(pinput))
+mx = cluster(pinput)
+print(f"Max Cluster: {mx}")
+pinput = format_input()
+safe = get_safe(pinput)
+print(f"Safe site: {safe}")
